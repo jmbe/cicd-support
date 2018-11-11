@@ -24,7 +24,7 @@ function upsearch() {
 # http://zaiste.net/2015/05/how_to_join_elements_of_an_array_in_bash/
 function join_s { local IFS="$1"; shift; echo "$*"; }
 
-function fpom() {
+function findpom() {
   paths=()
 
   while read -r line; do
@@ -49,6 +49,6 @@ function to_array() {
 
 
 if [ ! -z "$revision" ]; then
-  modules=$(git diff --name-only ..${revision} | xargs --max-args=1 dirname | sort --unique | fpom | sort --unique | to_array)
+  modules=$(git diff --name-only ..${revision} | xargs --max-args=1 dirname | sort --unique | findpom | sort --unique | to_array)
   echo "--also-make-dependents --projects ${modules}"
 fi
