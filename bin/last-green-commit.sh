@@ -14,7 +14,8 @@ url="${CI_SERVER_URL:-https://gitlab.com}/api/v4/projects/${CI_PROJECT_ID}/pipel
 #commit=$(curl -s "${url}" | jq -r 'first(.[] | .sha)' 2> /dev/null)
 commit=$(curl -s "${url}" | jq -r '.[0].sha' 2> /dev/null)
 
-if [[ ! -z "$commit" ]]; then
+# Will say "null" when there are no previous green builds
+if [[ ! -z "$commit" ]] && [[ "$commit" != "null" ]]; then
     echo "$commit" # Used when capturing output of this command
     echo "$commit" > .LAST_GREEN_COMMIT
 else
