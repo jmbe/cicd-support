@@ -48,7 +48,7 @@ function to_array() {
 }
 
 
-if [ ! -z "$revision" ]; then
+if [[ ! -z "$revision" ]] && [[ "$revision" != "0000000000000000000000000000000000000000" ]]; then
   modules=$(git diff --name-only ..${revision} | xargs --max-args=1 dirname | sort --unique | findpom | sort --unique | to_array)
   echo "--also-make-dependents --projects ${modules}"
 fi
