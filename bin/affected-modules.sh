@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 
-revision=${1:-$CI_COMMIT_BEFORE_SHA}
+revision=$1 # do not use $CI_COMMIT_BEFORE_SHA, will fail if previous build was failure
 
 echo "Checking changes from revision ${revision} forwards..." >&2
 
