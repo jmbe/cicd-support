@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 
-revision=${1:-$CI_COMMIT_BEFORE_SHA}
+revision=$1 # do not use $CI_COMMIT_BEFORE_SHA, will fail if previous build was failure
 
 echo "Checking changes from revision ${revision} forwards..." >&2
 
@@ -49,6 +49,11 @@ function to_array() {
 
 
 if [[ ! -z "$revision" ]] && [[ "$revision" != "0000000000000000000000000000000000000000" ]]; then
-  modules=$(git diff --name-only ..${revision} | xargs --max-args=1 dirname | sort --unique | findpom | sort --unique | to_array)
-  echo "--also-make-dependents --projects ${modules}"
+  changedfiles=$(git diff --name-only ${revision}..HEAD)
+  if [[ $? -eq 0 ]]; then
+    modules=$(echo ${changedfiles} | xargs --max-args=1 dirname | sort --unique | findpom | sort --unique | to_array)
+    echo "--also-make-dependents --projects ${modules}"
+  else
+    echo "Failed to find changed files comparing revision ${revision} with HEAD. It has possibly been removed." >&2
+  fi
 fi
