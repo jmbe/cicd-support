@@ -49,7 +49,7 @@ function to_array() {
 
 
 if [[ ! -z "$revision" ]] && [[ "$revision" != "0000000000000000000000000000000000000000" ]]; then
-  changedfiles=$(git diff --name-only ${revision}..HEAD | grep --extended-regexp --invert-match "^\.(idea|development|editorconfig|mvn)|\.(iml)$")
+  changedfiles=$(git diff --name-only ${revision}..HEAD | grep --extended-regexp --invert-match "^\.(idea|development|cicd|editorconfig|mvn)|\.(iml)$")
   gitResult=$?
 
   if [[ -z "${changedfiles}" ]]; then
