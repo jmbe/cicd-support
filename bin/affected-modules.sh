@@ -49,8 +49,12 @@ function to_array() {
 
 
 if [[ ! -z "$revision" ]] && [[ "$revision" != "0000000000000000000000000000000000000000" ]]; then
-  changedfiles=$(git diff --name-only ${revision}..HEAD)
-  if [[ $? -eq 0 ]]; then
+  changedfiles=$(git diff --name-only ${revision}..HEAD | grep --extended-regexp --invert-match "^\.(idea|development|editorconfig|mvn)|\.(iml)$")
+  gitResult=$?
+
+  if [[ -z "${changedfiles}" ]]; then
+    echo "List of changed files was empty for revision ${revision}. Likely only support files have changed." >&2
+  elif [[ ${gitResult} -eq 0 ]]; then
     modules=$(echo ${changedfiles} | xargs --max-args=1 dirname | sort --unique | findpom | sort --unique | to_array)
     echo "--also-make-dependents --projects ${modules}"
   else
