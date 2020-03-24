@@ -52,13 +52,13 @@ function to_array() {
 }
 
 if [[ ! -z "$revision" ]] && [[ "$revision" != "0000000000000000000000000000000000000000" ]]; then
-    changedfiles=$(git diff --name-only ${revision}..HEAD | grep --extended-regexp --invert-match "^\.(idea|development|cicd|editorconfig|mvn)|\.(iml)$")
+    changedfiles=$(git diff --name-only -z ${revision}..HEAD | grep --null-data --null --extended-regexp --invert-match "^\.(idea|development|cicd|editorconfig|mvn)|\.(iml)$" | xargs --null dirname | sort --unique | findpom | sort --unique)
     gitResult=$?
 
     if [[ -z "${changedfiles}" ]]; then
         echo "List of changed files was empty for revision ${revision}. Likely only support files have changed." >&2
     elif [[ ${gitResult} -eq 0 ]]; then
-        modules=$(echo ${changedfiles} | xargs --max-args=1 dirname | sort --unique | findpom | sort --unique | to_array)
+        modules=$(echo ${changedfiles} | xargs --null echo | to_array)
         echo "--also-make-dependents --projects ${modules}"
     else
         echo "Failed to find changed files comparing revision ${revision} with HEAD. It has possibly been removed." >&2
