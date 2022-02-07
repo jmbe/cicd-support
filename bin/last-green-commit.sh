@@ -1,12 +1,12 @@
 #!/bin/bash
 
 if [[ -z "$GITLAB_PRIVATE_TOKEN" ]]; then
-    echo "GITLAB_PRIVATE_TOKEN not provided"
+    echo "GITLAB_PRIVATE_TOKEN not provided" >&2
     exit 1
 fi
 
 if [[ -z "$CI_PROJECT_ID" ]]; then
-    echo "CI_PROJECT_ID not provided"
+    echo "CI_PROJECT_ID not provided" >&2
     exit 2
 fi
 
