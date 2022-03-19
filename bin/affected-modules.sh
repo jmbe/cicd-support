@@ -51,9 +51,14 @@ function to_array() {
     echo ${list}
 }
 
+uninteresting="^\.(idea|development|cicd|editorconfig)|\.(iml)$"
+if [ -n "$IGNORED_PATHS_REGEXP" ]; then
+    uninteresting="$uninteresting|$IGNORED_PATHS_REGEXP"
+fi
+
 if [[ ! -z "$revision" ]] && [[ "$revision" != "0000000000000000000000000000000000000000" ]]; then
     changedfiles=$(git diff --name-only -z ${revision}..HEAD | \
-    grep --null-data --null --extended-regexp --invert-match "^\.(idea|development|cicd|editorconfig)|\.(iml)$" | \
+    grep --null-data --null --extended-regexp --invert-match "$uninteresting" | \
     xargs --null dirname | \
     sort --unique | \
     findpom | \
