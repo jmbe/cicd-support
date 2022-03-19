@@ -54,6 +54,7 @@ function to_array() {
 uninteresting="^\.(idea|development|cicd|editorconfig)|\.(iml)$"
 if [ -n "$IGNORED_PATHS_REGEXP" ]; then
     uninteresting="$uninteresting|$IGNORED_PATHS_REGEXP"
+    echo "Using ignore list '$uninteresting'" >&2
 fi
 
 if [[ ! -z "$revision" ]] && [[ "$revision" != "0000000000000000000000000000000000000000" ]]; then
