@@ -52,7 +52,12 @@ function to_array() {
 }
 
 if [[ ! -z "$revision" ]] && [[ "$revision" != "0000000000000000000000000000000000000000" ]]; then
-    changedfiles=$(git diff --name-only -z ${revision}..HEAD | grep --null-data --null --extended-regexp --invert-match "^\.(idea|development|cicd|editorconfig)|\.(iml)$" | xargs --null dirname | sort --unique | findpom | sort --unique)
+    changedfiles=$(git diff --name-only -z ${revision}..HEAD | \
+    grep --null-data --null --extended-regexp --invert-match "^\.(idea|development|cicd|editorconfig)|\.(iml)$" | \
+    xargs --null dirname | \
+    sort --unique | \
+    findpom | \
+    sort --unique)
     gitResult=$?
 
     if [[ -z "${changedfiles}" ]]; then
