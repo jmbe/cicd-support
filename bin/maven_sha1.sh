@@ -9,4 +9,6 @@
 
 FEATURE_SHA1=$(echo $CI_COMMIT_REF_NAME | sed 's#feature/##' | sed 's#[-/]#_#g' | sed --regexp-extended 's#^(develop|master|main)$##')
 
-echo $FEATURE_SHA1
+if [ ! -z "$FEATURE_SHA1" ]; then
+    echo -$FEATURE_SHA1 # prefix with dash to be used as maven version classifier
+fi
