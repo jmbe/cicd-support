@@ -7,6 +7,10 @@
 # The script assumes this will be run on GitLab where CI_COMMIT_REF_NAME is available. Note that GitLab will use
 # a detached head, so git rev-parse will not work to find branch name (https://gitlab.com/gitlab-org/gitlab/-/issues/15409).
 
+if [ -z "$CI_COMMIT_REF_NAME" ]; then
+    echo "CI_COMMIT_REF_NAME is empty, cannot determine sha1" >&2
+fi
+
 FEATURE_SHA1=$(echo $CI_COMMIT_REF_NAME | sed 's#feature/##' | sed 's#[-/]#_#g' | sed --regexp-extended 's#^(develop|master|main)$##')
 
 if [ ! -z "$FEATURE_SHA1" ]; then
