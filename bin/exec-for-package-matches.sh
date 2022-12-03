@@ -8,6 +8,11 @@ if [ -x "$(command -v deno)" ]; then
 fi
 
 # Fall back to legacy script implementation if deno cannot be found
+if [ ! -x "$(command -v ack)" ]; then
+    echo "Cannot find ack - install it first" >&2
+    exit 1
+fi
+
 if [ -z "$2" ]; then
     echo "Usage: $(basename $0) package command-to-execute..."
     echo
