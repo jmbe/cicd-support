@@ -3,7 +3,7 @@
 # Delegate to deno implementation if deno can be found
 if [ -x "$(command -v deno)" ]; then
     # This indirection is required for Ubuntu 18.04. With newer versions the ts file can be called directly
-    deno run --allow-read --allow-run $(dirname $0)/exec-for-package-matches.ts $*
+    deno run --allow-read --allow-run $(dirname $0)/exec-for-package-matches.ts "$@"
     exit $?
 fi
 
