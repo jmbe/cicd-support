@@ -18,12 +18,11 @@ if [ -z "$2" ]; then
     echo
     echo "Examples:"
     echo
-    echo "  $(basename $0) @angular/cli ng update @angular/cli --allow-dirty"
+    echo "  $(basename $0) @angular/cli yarn run ng update @angular/cli --allow-dirty"
     # Note that package @angular/cli is intended in the next sample, to support running ng
-    echo "  $(basename $0) @angular/cli \"yarn && ng update @angular/core --allow-dirty --force\""
+    echo "  $(basename $0) @angular/cli \"yarn && yarn run ng update @angular/core --allow-dirty --force\""
     # Sample for major Angular upgrades, e.g. 9 -> 10
-    echo "  $(basename $0) @angular/cli \"yarn && ng update @angular/core @angular/cli --allow-dirty --force\""
-    echo "  $(basename $0) @ngxs-labs/data yarn add @ngxs-labs/data@3.0.5"
+    echo "  $(basename $0) @angular/cli \"yarn && yarn run ng update @angular/core @angular/cli --allow-dirty --force\""
     # Take care to quote properly when the command line to run uses pipes
     echo "  $(basename $0) @angular-devkit/build-angular \"cat package.json | jq '.resolutions.typescript = \\\"3.8.3\\\"' | sponge package.json && yarn\""
     # Sample selective resolution, keyname must be quoted
