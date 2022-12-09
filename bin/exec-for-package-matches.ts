@@ -7,26 +7,30 @@ if (!Deno.args[1]) {
   console.log();
   console.log("Examples:");
   console.log();
-  console.log("  exec-for-package-matches.ts @angular/cli yarn run ng update @angular/cli --allow-dirty");
-  // Note that matching package @angular/cli is intended in the next sample, to support running ng
-  console.log("  exec-for-package-matches.ts @angular/cli \"yarn && yarn run ng update @angular/core --allow-dirty --force\"");
-  // Sample for major Angular upgrades, e.g. 9 -> 10
-  console.log("  exec-for-package-matches.ts @angular/cli \"yarn && yarn run ng update @angular/core @angular/cli --allow-dirty --force\"");
-  // Take care to quote properly when the command line to run uses pipes
-  console.log("  exec-for-package-matches.ts @angular-devkit/build-angular \"cat package.json | jq '.resolutions.typescript = \\\"3.8.3\\\"' | sponge package.json && yarn\"");
-  // Sample selective resolution, keyname must be quoted
-  console.log("  exec-for-package-matches.ts @angular-devkit/build-angular \"cat package.json | jq '.resolutions.\\\"@angular-devkit/**/typescript\\\" = \\\"3.8.3\\\"' | sponge package.json && yarn\"");
-  console.log("  exec-for-package-matches.ts eslint \"pwd && yarn && yarn run eslint --fix\"");
+
+  // Sample upgrading Angular
+  console.log(`  exec-for-package-matches.ts @angular/cli 'yarn && yarn run ng update @angular/cli @angular/core --allow-dirty --force'`);
+  console.log(`  exec-for-package-matches.ts @angular/core 'yarn && yarn up "@angular/*" --exact'`);
+  console.log(`  exec-for-package-matches.ts @angular-devkit/schematics 'yarn && yarn up "@angular-devkit/*" --exact'`);
+  console.log();
+
+  // Take care to escape quotes properly when the command line to run uses pipes
+  console.log(`  exec-for-package-matches.ts @angular-devkit/build-angular 'cat package.json | jq ".resolutions.typescript = \\"4.8.4\\"" | sponge package.json && yarn'`);
+
+  // Sample registering selective resolution, keyname must be quoted for jq
+  console.log(`  exec-for-package-matches.ts @angular-devkit/build-angular 'cat package.json | jq ".resolutions.\\"@angular-devkit/**/typescript\\" = \\"4.8.4\\"" | sponge package.json && yarn'`);
+
+  // Sample running eslint --fix for all packages
+  console.log(`  exec-for-package-matches.ts eslint 'pwd && yarn && yarn run eslint --fix'`);
+
   console.log();
 
   Deno.exit(1);
 }
 
-
 const matchPackage = Deno.args[0];
 const exec = [...Deno.args];
 exec.shift();
-
 
 function createCommand() {
   if (os.platform() === "windows") {
