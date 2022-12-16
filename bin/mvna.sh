@@ -10,7 +10,7 @@ source "$WORKSPACE_ROOT"/.cicd/bin/affected-modules.sh 2>/dev/null
 # https://www.atlassian.com/git/tutorials/git-forks-and-upstreams
 curr_branch=$(git rev-parse --abbrev-ref HEAD)
 curr_remote=$(git config branch.$curr_branch.remote)
-curr_merge_branch=$(git config branch.$curr_branch.merge | cut -d / -f 3)
+curr_merge_branch=$(git config branch.$curr_branch.merge | cut -d / -f 3-)
 upstream_ref=$curr_remote/$curr_merge_branch
 
 changedfiles=$({
