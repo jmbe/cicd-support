@@ -27,7 +27,7 @@ if [ -z "$2" ]; then
     echo "  $(basename $0) @angular-devkit/build-angular \"cat package.json | jq '.resolutions.typescript = \\\"3.8.3\\\"' | sponge package.json && yarn\""
     # Sample selective resolution, keyname must be quoted
     echo "  $(basename $0) @angular-devkit/build-angular \"cat package.json | jq '.resolutions.\\\"@angular-devkit/**/typescript\\\" = \\\"3.8.3\\\"' | sponge package.json && yarn\""
-    echo "  $(basename $0) tslint \"pwd && yarn && yarn run tslint --fix\""
+    echo "  $(basename $0) eslint \"pwd && yarn && yarn run eslint --fix\""
     echo
     exit 1
 fi
