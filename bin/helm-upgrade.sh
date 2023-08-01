@@ -10,7 +10,7 @@ if [ -z "$1" ]; then
   echo "Release name must be provided"
 fi
 
-if helm ls --short | grep "^${releaseName}$" >/dev/null; then
+if helm ls --all --short | grep "^${releaseName}$" >/dev/null; then
   echo "Upgrading $releaseName..."
   helm upgrade "$releaseName" "$@"
 else
