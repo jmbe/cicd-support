@@ -1,5 +1,13 @@
 #! /usr/bin/env bash
 
+
+if ! command -v htpasswd > /dev/null; then
+  echo "! Need htpasswd to encrypt passwords. Run:"
+  echo
+  echo "   sudo apt install apache2-utils"
+  exit 1
+fi
+
 length=${1:-16}
 
 # https://unix.stackexchange.com/a/419855/378722
@@ -15,6 +23,10 @@ function displayHashed() {
     echo "$plain"
     echo "$hashed"
 }
+
+echo "Passwords formatted to be used with Spring Security"
+echo "---------------------------------------------------"
+echo
 
 echo "Mixed:"
 plain=$(tr -dc _A-Z-a-z-0-9 </dev/urandom | head -c${length})
