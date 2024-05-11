@@ -1,4 +1,4 @@
-#!/bin/bash
+#! /usr/bin/env bash
 
 # When testing locally, provide a personal access token with scope api
 # https://gitlab.com/-/user_settings/personal_access_tokens
