@@ -30,5 +30,5 @@ if [[ ! -z "$commit" ]] && [[ "$commit" != "null" ]]; then
 else
     echo "Failed to find last green commit" >&2
     which jq >&2
-    # curl --silent "${url}"
+    curl --header "PRIVATE-TOKEN: ${GITLAB_READONLY_API_TOKEN}" --silent "${url}" >&2
 fi
