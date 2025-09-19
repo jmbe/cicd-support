@@ -30,7 +30,7 @@ const ignoredDirectories = [
   "target",
 ];
 
-async function traverse(currentPath: string) {
+async function traverse(currentPath: string, exitCode: number = 0): Promise<number> {
 
   for await (const dirEntry of Deno.readDir(currentPath)) {
     const entryPath = `${currentPath}/${dirEntry.name}`;
@@ -39,7 +39,8 @@ async function traverse(currentPath: string) {
 
     if (dirEntry.isDirectory) {
       if (!ignoredDirectories.includes(dirEntry.name)) {
-        await traverse(entryPath);
+        const code = await traverse(entryPath, exitCode);
+        exitCode ||= code;
       }
     } else if ("yarn.lock" === dirEntry.name) {
       console.log(`Found yarn.lock at ${Deno.cwd()}/${entryPath}`);
@@ -49,10 +50,13 @@ async function traverse(currentPath: string) {
         cwd: currentPath,
       });
 
-      await process.status();
-      console.log();
+      const status = await process.status();
+      exitCode ||= status.code;
     }
   }
+
+  return exitCode;
 }
 
-await traverse(".");
+const exitCode = await traverse(".");
+Deno.exit(exitCode);
