@@ -2,6 +2,9 @@
 
 import os from "https://deno.land/x/dos@v0.11.0/mod.ts";
 
+/* Support passing extra arguments, typically additional ignores per project */
+const extraArgs = [...Deno.args];
+
 const yarnArgs = [
   "npm",
   "audit",
@@ -16,10 +19,10 @@ const yarnArgs = [
 
 function createCommand() {
   if (os.platform() === "windows") {
-    return ["cmd", "/c", "yarn", ...yarnArgs];
+    return ["cmd", "/c", "yarn", ...yarnArgs, ...extraArgs];
   }
 
-  return ["yarn", ...yarnArgs];
+  return ["yarn", ...yarnArgs, ...extraArgs];
 }
 
 const ignoredDirectories = [
