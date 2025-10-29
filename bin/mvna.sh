@@ -3,9 +3,10 @@
 # Runs maven for affected modules only, modules changed since last push
 # e.g. mvna.sh test
 
-WORKSPACE_ROOT=$(readlink -f $(dirname "$0")/../..)
+SCRIPTPATH=$(dirname "$0")
+WORKSPACE_ROOT=$(readlink -f $SCRIPTPATH/../..)
 # shellcheck disable=SC1090
-source "$WORKSPACE_ROOT"/.cicd/bin/affected-modules.sh 2>/dev/null
+source "$SCRIPTPATH"/affected-modules.sh 2>/dev/null
 
 # https://www.atlassian.com/git/tutorials/git-forks-and-upstreams
 curr_branch=$(git rev-parse --abbrev-ref HEAD)
