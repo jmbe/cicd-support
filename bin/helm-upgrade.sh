@@ -11,7 +11,7 @@ if [ -z "$1" ]; then
   exit 1
 fi
 
-if helm ls --all --short | grep "^${releaseName}$" >/dev/null; then
+if helm ls --short | grep "^${releaseName}$" >/dev/null; then
   echo "Upgrading $releaseName..."
   helm upgrade "$releaseName" "$@"
 else
