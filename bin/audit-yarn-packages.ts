@@ -9,8 +9,6 @@ const extraArgs = [...Deno.args];
 const yarnArgs = [
   "npm",
   "audit",
-  "--environment",
-  "production",
   "--severity",
   "moderate",
 ];
