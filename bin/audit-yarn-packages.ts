@@ -2,7 +2,8 @@
 
 import os from "https://deno.land/x/dos@v0.11.0/mod.ts";
 
-/* Support passing extra arguments, typically additional ignores per project */
+/* Support passing extra arguments, typically additional ignores per project, repeating
+ --ignore to ignore different vulnerabilities */
 const extraArgs = [...Deno.args];
 
 const yarnArgs = [
@@ -12,9 +13,6 @@ const yarnArgs = [
   "production",
   "--severity",
   "moderate",
-  /* List of vulnerabilities to ignore - repeat --ignore to ignore different vulnerabilities */
-  // Bootstrap 4.x affects unused carousel component https://github.com/advisories/GHSA-vc8w-jr9v-vj7f
-  "--ignore", "1103908",
 ];
 
 function createCommand() {
