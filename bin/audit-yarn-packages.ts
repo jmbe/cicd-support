@@ -2,23 +2,54 @@
 
 import os from "https://deno.land/x/dos@v0.11.0/mod.ts";
 
+// TODO rename this and related files to audit-packages.ts
+
 /* Support passing extra arguments, typically additional ignores per project, repeating
  --ignore to ignore different vulnerabilities */
 const extraArgs = [...Deno.args];
 
-const yarnArgs = [
-  "npm",
-  "audit",
-  "--severity",
-  "moderate",
-];
+function createLinuxCommand(packageManager: string) {
 
-function createCommand() {
-  if (os.platform() === "windows") {
-    return ["cmd", "/c", "yarn", ...yarnArgs, ...extraArgs];
+  if ("yarn" === packageManager) {
+    return [
+      "yarn",
+      "npm",
+      "audit",
+      "--severity",
+      "moderate",
+    ];
+  } else if ("pnpm" === packageManager) {
+    return [
+      "pnpm",
+      "audit",
+      "--audit-level",
+      "moderate",
+    ];
+  } else {
+    throw `Unsupported package manager: ${packageManager}`;
   }
 
-  return ["yarn", ...yarnArgs, ...extraArgs];
+}
+
+function createCommand(packageManager: string) {
+  const command = createLinuxCommand(packageManager);
+  if (os.platform() === "windows") {
+    return ["cmd", "/c", ...command, ...extraArgs];
+  }
+
+  return [...command, ...extraArgs];
+}
+
+function lockFileToPackageManager(lockFile: string) {
+  if (lockFile === "yarn.lock") {
+    return "yarn";
+  } else if (lockFile === "pnpm-lock.yaml") {
+    return "pnpm";
+  } else if (lockFile === "package-lock.json") {
+    return "npm";
+  } else {
+    throw `Unknown lock file: ${lockFile}`;
+  }
 }
 
 const ignoredDirectories = [
@@ -41,11 +72,11 @@ async function traverse(currentPath: string, exitCode: number = 0): Promise<numb
         const code = await traverse(entryPath, exitCode);
         exitCode ||= code;
       }
-    } else if ("yarn.lock" === dirEntry.name) {
-      console.log(`Found yarn.lock at ${Deno.cwd()}/${entryPath}`);
+    } else if (["yarn.lock", "pnpm-lock.yaml"].includes(dirEntry.name)) {
+      console.log(`Found ${dirEntry.name} at ${Deno.cwd()}/${entryPath}`);
 
       const process = Deno.run({
-        cmd: createCommand(),
+        cmd: createCommand(lockFileToPackageManager(dirEntry.name)),
         cwd: currentPath,
       });
 
