@@ -1,43 +1,13 @@
-#! /usr/bin/env -S npx --yes deno@latest run --allow-read --allow-run
+#! /usr/bin/env -S deno run --allow-read --allow-run
 
 import os from "https://deno.land/x/dos@v0.11.0/mod.ts";
 
-// TODO rename this and related files to audit-packages.ts
-
-/* Support passing extra arguments, typically additional ignores per project, repeating
- --ignore to ignore different vulnerabilities */
-const extraArgs = [...Deno.args];
-
-function createLinuxCommand(packageManager: string) {
-
-  if ("yarn" === packageManager) {
-    return [
-      "yarn",
-      "npm",
-      "audit",
-      "--severity",
-      "moderate",
-    ];
-  } else if ("pnpm" === packageManager) {
-    return [
-      "pnpm",
-      "audit",
-      "--audit-level",
-      "moderate",
-    ];
-  } else {
-    throw `Unsupported package manager: ${packageManager}`;
-  }
-
-}
-
 function createCommand(packageManager: string) {
-  const command = createLinuxCommand(packageManager);
   if (os.platform() === "windows") {
-    return ["cmd", "/c", ...command, ...extraArgs];
+    return ["cmd", "/c", packageManager, "install"];
   }
 
-  return [...command, ...extraArgs];
+  return [packageManager, "install"];
 }
 
 function lockFileToPackageManager(lockFile: string) {
@@ -80,8 +50,9 @@ async function traverse(currentPath: string, exitCode: number = 0): Promise<numb
         cwd: currentPath,
       });
 
-      const status = await process.status();
+      const status: { success: boolean, code: number } = await process.status();
       exitCode ||= status.code;
+      console.log();
     }
   }
 
