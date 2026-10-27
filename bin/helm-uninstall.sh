@@ -3,6 +3,12 @@
 # Wrapper which only runs uninstall for existing releases.
 # Takes same arguments as helm uninstall, except release-name must be provided first.
 
+# Helm 4 removed `helm list --all`; it lists all statuses by default.
+HELM_LIST_ALL=""
+case "$(helm version --template '{{.Version}}')" in
+  v3.*) HELM_LIST_ALL="--all" ;;
+esac
+
 releaseName=$1
 shift
 
@@ -11,7 +17,7 @@ if [ -z "$releaseName" ]; then
   exit 1
 fi
 
-if helm ls --all --short | grep "^${releaseName}$" >/dev/null; then
+if helm ls $HELM_LIST_ALL --short | grep "^${releaseName}$" >/dev/null; then
   echo "Uninstalling $releaseName..."
   helm uninstall "$releaseName"
 else
