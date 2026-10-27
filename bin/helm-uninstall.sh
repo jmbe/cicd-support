@@ -3,7 +3,9 @@
 # Wrapper which only runs uninstall for existing releases.
 # Takes same arguments as helm uninstall, except release-name must be provided first.
 
-# Helm 4 removed `helm list --all`; it lists all statuses by default.
+# Align Helm 3/4 results so releases of any status are found: Helm 3 needs `--all`
+# to include e.g. pending/uninstalled releases, while Helm 4 removed the flag and
+# lists all statuses by default.
 HELM_LIST_ALL=""
 case "$(helm version --template '{{.Version}}')" in
   v3.*) HELM_LIST_ALL="--all" ;;
