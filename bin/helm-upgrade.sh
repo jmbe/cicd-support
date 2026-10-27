@@ -11,7 +11,10 @@ if [ -z "$1" ]; then
   exit 1
 fi
 
-if helm ls --short | grep "^${releaseName}$" >/dev/null; then
+# Explicit status flags give the same result on Helm 3 and 4: Helm 3 lists deployed+failed
+# by default, while Helm 4 lists all statuses. We want any deployed or failed release, but not
+# pending/uninstalled ones, which helm upgrade would reject anyway.
+if helm ls --deployed --failed --short | grep "^${releaseName}$" >/dev/null; then
   echo "Upgrading $releaseName..."
   helm upgrade "$releaseName" "$@"
 else
